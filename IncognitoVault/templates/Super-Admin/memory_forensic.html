@@ -1,0 +1,114 @@
+{% extends "Super-Admin/Base/SA.html" %}
+
+{% block title %}Memory Forensics - IncognitoVault{% endblock %}
+
+{% block page_header %}Memory Forensics{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Memory Snapshot Overview Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Memory Snapshot Overview</h5>
+                <i class='bx bx-memory-card bx-lg mb-3'></i>
+                <p class="card-text">Summary of collected memory snapshots.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Total Snapshots:</strong> 10</li>
+                    <li><strong>Analyzed Snapshots:</strong> 8</li>
+                    <li><strong>Pending Analysis:</strong> 2</li>
+                </ul>
+                <a href="#" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Analysis Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Process Analysis</h5>
+                <i class='bx bx-task bx-lg mb-3'></i>
+                <p class="card-text">Analyze running processes and memory usage.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Processes Analyzed:</strong> 500</li>
+                    <li><strong>Suspicious Processes:</strong> 15</li>
+                    <li><strong>Terminated Processes:</strong> 5</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Analyze Processes</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Memory Dump Analysis Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Memory Dump Analysis</h5>
+                <i class='bx bx-dump bx-lg mb-3'></i>
+                <p class="card-text">Inspect memory dumps for forensic evidence.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Memory Dumps Analyzed:</strong> 3</li>
+                    <li><strong>Malicious Artifacts:</strong> 10</li>
+                    <li><strong>Reports Generated:</strong> 3</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Analyze Dumps</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Upload and Analysis Card -->
+    <div class="col-md-6 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Upload Memory Dump</h5>
+                <i class='bx bx-upload bx-lg mb-3'></i>
+                <p class="card-text">Upload memory dumps for detailed analysis.</p>
+                <form method="POST" action="/upload" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="memoryDump" class="form-label">Select Memory Dump</label>
+                        <input type="file" class="form-control" id="memoryDump" name="memoryDump" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload and Analyze</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Results Card -->
+    <div class="col-md-6 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Analysis Results</h5>
+                <i class='bx bx-pie-chart-alt bx-lg mb-3'></i>
+                <p class="card-text">View the results of your memory dump analysis.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Dumps Analyzed:</strong> 5</li>
+                    <li><strong>Critical Issues Found:</strong> 3</li>
+                    <li><strong>Detailed Report:</strong> Available</li>
+                </ul>
+                <a href="#" class="btn btn-primary">View Results</a>
+                <a href="#" class="btn btn-secondary">Download PDF</a>
+                <a href="#" class="btn btn-secondary">Download DOCX</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Memory Forensics Settings Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Settings</h5>
+                <i class='bx bx-cog bx-lg mb-3'></i>
+                <p class="card-text">Configure memory forensic parameters.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Scan Intensity:</strong> High</li>
+                    <li><strong>Auto-Report:</strong> Enabled</li>
+                    <li><strong>Notification Alerts:</strong> Enabled</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Edit Settings</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

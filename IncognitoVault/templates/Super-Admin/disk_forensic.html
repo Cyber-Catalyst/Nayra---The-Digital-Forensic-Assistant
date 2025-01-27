@@ -1,0 +1,114 @@
+{% extends "Super-Admin/Base/SA.html" %}
+
+{% block title %}Disk Forensics - IncognitoVault{% endblock %}
+
+{% block page_header %}Disk Forensics{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Disk Overview Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Disk Overview</h5>
+                <i class='bx bx-hdd bx-lg mb-3'></i>
+                <p class="card-text">Summary of connected disks and storage usage.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Total Disks:</strong> 5</li>
+                    <li><strong>Used Space:</strong> 2.5 TB</li>
+                    <li><strong>Available Space:</strong> 1.5 TB</li>
+                </ul>
+                <a href="#" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partition Analysis Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Partition Analysis</h5>
+                <i class='bx bx-layer bx-lg mb-3'></i>
+                <p class="card-text">Analyze disk partitions and file systems.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Partitions Scanned:</strong> 12</li>
+                    <li><strong>Corrupted Partitions:</strong> 2</li>
+                    <li><strong>Healthy Partitions:</strong> 10</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Analyze Partitions</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Recovery Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">File Recovery</h5>
+                <i class='bx bx-undo bx-lg mb-3'></i>
+                <p class="card-text">Recover deleted or lost files from the disk.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Files Recovered:</strong> 150</li>
+                    <li><strong>Corrupted Files:</strong> 20</li>
+                    <li><strong>Recovery Rate:</strong> 85%</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Recover Files</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Upload and Analysis Card -->
+    <div class="col-md-6 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Upload Disk Image for Analysis</h5>
+                <i class='bx bx-upload bx-lg mb-3'></i>
+                <p class="card-text">Upload disk images for detailed forensic analysis.</p>
+                <form method="POST" action="/upload" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="diskImage" class="form-label">Select Disk Image</label>
+                        <input type="file" class="form-control" id="diskImage" name="diskImage" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload and Analyze</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Results Card -->
+    <div class="col-md-6 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Analysis Results</h5>
+                <i class='bx bx-pie-chart-alt bx-lg mb-3'></i>
+                <p class="card-text">View the results of your disk image analysis.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Images Analyzed:</strong> 3</li>
+                    <li><strong>Issues Found:</strong> 5</li>
+                    <li><strong>Detailed Report:</strong> Available</li>
+                </ul>
+                <a href="#" class="btn btn-primary">View Results</a>
+                <a href="#" class="btn btn-secondary">Download PDF</a>
+                <a href="#" class="btn btn-secondary">Download DOCX</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disk Settings Card -->
+    <div class="col-md-4 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <h5 class="card-title">Disk Settings</h5>
+                <i class='bx bx-cog bx-lg mb-3'></i>
+                <p class="card-text">Configure disk scanning parameters and recovery options.</p>
+                <ul class="list-unstyled">
+                    <li><strong>Scan Depth:</strong> Full</li>
+                    <li><strong>Auto-Recovery:</strong> Enabled</li>
+                    <li><strong>Backup Schedule:</strong> Weekly</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Edit Settings</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -24,7 +24,7 @@ from Modules.session import key_gen
 from Modules.form import LoginForm
 from Modules.captcha_manager import captcha
 from Modules.lockout_manager import LockoutManager
-from Modules.api import api
+#from Modules.gRPC import api
 from Modules.version import __version__
 
 # functools is not removed since it's probably used for decorators (verify before removing)
@@ -260,9 +260,7 @@ def login_required(f):
     return decorated_function
 
 #################### Route Handlers ######################
-@app.route('/Public_API', methods=['GET'])
-def Public_API():
-    return api.handle_request(request)
+
 
 @rate_limited(rate_limiter)
 @app.route('/')
@@ -355,6 +353,37 @@ def database():
         user_id = session['user_id']
     return render_template('Super-Admin/database.html', user=user, user_id=user_id, name=name)
 
+@app.route('/Network-Forensic')
+@login_required
+@rate_limited(rate_limiter)
+def network_forensic():
+    if 'user' in session:
+        user = session['user']
+        name = session['username']
+        user_id = session['user_id']
+    return render_template('Super-Admin/network_forensic.html', user=user, user_id=user_id, name=name)
+
+@app.route('/Disk-Forensic')
+@login_required
+@rate_limited(rate_limiter)
+def disk_forensic():
+    if 'user' in session:
+        user = session['user']
+        name = session['username']
+        user_id = session['user_id']
+    return render_template('Super-Admin/disk_forensic.html', user=user, user_id=user_id, name=name)
+
+@app.route('/Memory-Forensic')
+@login_required
+@rate_limited(rate_limiter)
+def memory_forensic():
+    if 'user' in session:
+        user = session['user']
+        name = session['username']
+        user_id = session['user_id']
+    return render_template('Super-Admin/memory_forensic.html', user=user, user_id=user_id, name=name)
+
+
 @app.route('/Forms')
 @login_required
 @rate_limited(rate_limiter)
@@ -414,5 +443,4 @@ def keep_alive():
 
 if __name__ == '__main__':
     print(f"Incognito-Vault, Version: {__version__}")
-    #print(f"Your API key is: {api.api_key}")
-    app.run(debug=False, host='0.0.0.0', port=8800)
+    app.run(debug=True, host='0.0.0.0', port=8800)
