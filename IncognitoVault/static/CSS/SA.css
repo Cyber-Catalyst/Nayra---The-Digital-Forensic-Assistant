@@ -23,7 +23,7 @@ body {
     position: relative;
     padding-right: 20px;
     padding-left: calc(var(--nav-width) + 2rem);
-    font-family: var(--body-font);
+    font-family: Rubik;
     font-size: var(--normal-font-size);
     background-size: cover;
     background-image: url(https://images.unsplash.com/photo-1610447158291-d917870bf750?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8NGslMjBmb3Jlc3R8ZW58MHx8MHx8fDA%3D);
@@ -390,5 +390,14 @@ body:has(.footer:in-view) .footer {
     margin-left: 1000px !important;
     font-size: 18px;
     font-weight: bold;
-    font-family: 'Gill Sans';
+    font-family: Rubik;
+}
+
+.ips {
+    font-size: 18px;
+    font-family: Rubik;
+}
+.IPS {
+    font-weight: bold;
+    font-size: 20px;
 }

@@ -1,5 +1,5 @@
 # Standard library imports
-import string, os, json, secrets, base64, secrets, logging, requests
+import string, os, json, secrets, base64, secrets, logging, requests, subprocess
 from io import BytesIO
 from datetime import timedelta, datetime
 from collections import deque
@@ -16,6 +16,8 @@ from argon2.exceptions import VerifyMismatchError
 
 
 # Custom module imports
+from Modules.Sniffer import PacketSniffer
+from Modules.IPS import IPAddress
 from Modules.error_handler import ErrorHandler
 from Modules.rate_limiter import *
 from Modules.redis_manager import *
@@ -50,6 +52,8 @@ app.config.update({
     'WTF_CSRF_TIME_LIMIT': None,
     'PERMANENT_SESSION_LIFETIME': timedelta(seconds=60)
 })
+
+sniffer = PacketSniffer()
 
 redis_conn = get_redis_connection() 
 rate_limiter = RateLimiter(
@@ -261,6 +265,26 @@ def login_required(f):
 
 #################### Route Handlers ######################
 
+@app.route('/start_sniffing')
+@login_required
+@rate_limited(rate_limiter)
+def start_sniffing():
+    sniffer.start_sniffing()
+    return jsonify(status="Sniffing started"), 200
+
+@app.route('/stop_sniffing')
+@login_required
+@rate_limited(rate_limiter)
+def stop_sniffing():
+    sniffer.stop_sniffing()
+    return jsonify(status="Sniffing stopped"), 200
+
+@app.route('/get_packets')
+@login_required
+@rate_limited(rate_limiter)
+def get_packets():
+    packets = sniffer.get_latest_packets()
+    return jsonify(packets=packets)
 
 @rate_limited(rate_limiter)
 @app.route('/')
@@ -361,7 +385,9 @@ def network_forensic():
         user = session['user']
         name = session['username']
         user_id = session['user_id']
-    return render_template('Super-Admin/network_forensic.html', user=user, user_id=user_id, name=name)
+        ip_instance = IPAddress()
+        ips = ip_instance.get_ips()
+        return render_template('Super-Admin/network_forensic.html', user=user, user_id=user_id, name=name, ips=ips)
 
 @app.route('/Disk-Forensic')
 @login_required
@@ -383,6 +409,15 @@ def memory_forensic():
         user_id = session['user_id']
     return render_template('Super-Admin/memory_forensic.html', user=user, user_id=user_id, name=name)
 
+@app.route('/Analyze_Traffic')
+@login_required
+@rate_limited(rate_limiter)
+def analyze_traffic():
+    if 'user' in session:
+        user = session['user']
+        name = session['username']
+        user_id = session['user_id']
+    return render_template('Super-Admin/Analyze_Traffic.html', user=user, user_id=user_id, name=name)
 
 @app.route('/Forms')
 @login_required
@@ -443,4 +478,4 @@ def keep_alive():
 
 if __name__ == '__main__':
     print(f"Incognito-Vault, Version: {__version__}")
-    app.run(debug=True, host='0.0.0.0', port=8800)
+    app.run(debug=True, threaded="yes", host='0.0.0.0', port=8800)

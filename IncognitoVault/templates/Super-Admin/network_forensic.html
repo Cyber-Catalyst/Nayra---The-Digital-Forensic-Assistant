@@ -5,6 +5,27 @@
 {% block page_header %}Network Forensics{% endblock %}
 
 {% block content %}
+
+<div class="row">
+
+        <div class="col-md-6 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <p class="card-text ips">Your Private IP: <span class="IPS">{{ ips.private_ip }}</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network Traffic Card -->
+    <div class="col-md-6 mb-3">
+        <div class="card card-elegant">
+            <div class="card-body">
+                <p class="card-text ips">Your Public IP: <span class="IPS">{{ ips.public_ip }}</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <!-- Incident Overview Card -->
     <div class="col-md-4 mb-3">
@@ -35,7 +56,7 @@
                     <li><strong>Suspicious Packets:</strong> 50,000</li>
                     <li><strong>Bandwidth Usage:</strong> 300 GB</li>
                 </ul>
-                <a href="#" class="btn btn-primary">View Traffic</a>
+                <a href="/Analyze_Traffic" class="btn btn-primary">View Traffic</a>
             </div>
         </div>
     </div>

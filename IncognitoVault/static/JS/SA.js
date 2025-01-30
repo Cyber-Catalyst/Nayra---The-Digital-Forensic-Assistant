@@ -194,3 +194,4 @@ function removeField(id) {
   const field = document.getElementById(`field-${id}`);
   field.remove();
 }
+

@@ -1,0 +1,32 @@
+{% extends "Super-Admin/Base/SA.html" %}
+{% block title %}Network Forensics - IncognitoVault{% endblock %}
+{% block page_header %}Live Traffic Analyze{% endblock %}
+{% block content %}
+
+
+</head>
+<body>
+<button id="startBtn">Start Sniffing</button>
+<button id="stopBtn" disabled>Stop Sniffing</button>
+
+<div class="table_packets" id="packets">
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Serial No.</th>
+                <th>Time</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Protocol</th>
+                <th>Length</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody id="packetTableBody">
+            <!-- Packets will be appended here -->
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}
