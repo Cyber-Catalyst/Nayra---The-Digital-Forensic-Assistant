@@ -9,6 +9,14 @@ from dbutils.pooled_db import PooledDB
 # Configure logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Setting the switch for modules (0 - Disabled, 1 - Enabled)
+MODULE_SWITCH = 1  # Set to 0 to disable the module
+
+class DummyConnection:
+    """A dummy connection object to avoid AttributeError when MODULE_SWITCH is 0."""
+    def close(self):
+        pass  # No actual closing of connections
+
 class DatabaseManager:
     def __init__(self, config_path=None, db_section='1_DB'):
         self.config_path = config_path or os.getenv('DB_CONFIG_PATH', 'Database/mysql.json')
@@ -114,6 +122,10 @@ class DatabaseManager:
             raise Exception(error_message)
 
     def get_connection(self):
+        if MODULE_SWITCH == 0:
+            logging.info("Database module is disabled.")
+            return DummyConnection()  # Return a dummy connection to avoid errors
+        
         if self.pool is None:
             logging.info("Initializing connection pool (lazy loading)...")
             self._initialize_pool()
@@ -125,6 +137,10 @@ class DatabaseManager:
             raise Exception(error_message)
 
     def close_pool(self):
+        if MODULE_SWITCH == 0:
+            logging.info("Database module is disabled.")
+            return  # Return early to avoid errors
+        
         if self.pool:
             self.pool.close()
             self.pool = None

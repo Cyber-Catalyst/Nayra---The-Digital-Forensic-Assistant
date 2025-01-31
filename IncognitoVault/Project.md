@@ -1,6 +1,6 @@
 ```bash
 
-Incognito-Vault Version: 1.0.0 — Redefining security for business, professionals and students. Trust, Innovations & Security. (Powered by ParseSphere Innovations).
+Incognito-Vault Version: 1.0.3 — Redefining security for business, professionals and students. Trust, Innovations & Security. (Powered by ParseSphere Innovations).
 │
 ├── templates/
 │   ├── auth.html                 # Login Form

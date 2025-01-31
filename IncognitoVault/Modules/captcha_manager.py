@@ -1,6 +1,9 @@
 import random
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
+# SWITCH: 1 = enabled, 0 = disabled
+SWITCH = 1  # Set to 0 to disable, 1 to enable
+
 class CaptchaGenerator:
     def __init__(self, width=120, height=100, bg_color=(255, 255, 255), text_color=(0, 0, 0)):
         self.width = width
@@ -9,13 +12,17 @@ class CaptchaGenerator:
         self.text_color = text_color
 
     def generate_captcha(self):
-        num1 = random.randint(1, 10)
-        num2 = random.randint(1, 10)
-        operation = random.choice(['+', '-', '*'])
-        question = f"{num1} {operation} {num2}"
-        answer = eval(question)
-        image = self.create_captcha_image(question)
-        return image, answer
+        if SWITCH:
+            num1 = random.randint(1, 10)
+            num2 = random.randint(1, 10)
+            operation = random.choice(['+', '-', '*'])
+            question = f"{num1} {operation} {num2}"
+            answer = eval(question)
+            image = self.create_captcha_image(question)
+            return image, answer
+        else:
+            print("Captcha module is disabled.")
+            return None, None
 
     def create_captcha_image(self, text):
         image = Image.new('RGB', (self.width, self.height), self.bg_color)
@@ -50,7 +57,11 @@ class CaptchaGenerator:
         return transformed_image
 
     def validate_captcha(self, user_answer, correct_answer):
-        return user_answer == correct_answer
+        if SWITCH:
+            return user_answer == correct_answer
+        else:
+            print("Captcha module is disabled.")
+            return False
 
-# Usage example
+
 captcha = CaptchaGenerator()
