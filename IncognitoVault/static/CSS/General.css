@@ -100,3 +100,75 @@ tr:hover {
         padding: 10px;
     }
 }
+
+
+/* Pulsating Led for MYSQL & REDIS Status Indicator*/
+.led-indicator {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 30px;
+    margin-bottom: 10px;
+    animation: pulse 3s ease-in-out infinite; /* Slightly slower pulse */
+    box-shadow: 0 0 10px rgba(40, 180, 99, 0.7); /* Green glow */
+}
+
+.green {
+    background-color: #28B463;
+}
+
+.red {
+    background-color: #FF5733;
+    box-shadow: 0 0 10px rgba(255, 87, 51, 0.7); /* Red glow */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+        background-color: #00ff6a; /* Green */
+        box-shadow: 0 0 10px rgba(0, 255, 60, 0.7); /* Green glow */
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+        background-color: #1e8e40; /* Darker green */
+        box-shadow: 0 0 20px rgb(0, 146, 61); /* Stronger green glow */
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0.8;
+        background-color:  #00ff6a;/* Green */
+        box-shadow: 0 0 10px rgba(0, 255, 106, 0.7); /* Green glow */
+    }
+}
+
+.red {
+    background-color: #FF5733;
+    box-shadow: 0 0 10px rgba(255, 87, 51, 0.7); /* Red glow */
+    animation: pulse-red 2s ease-in-out infinite; /* Slightly slower pulse */
+}
+
+@keyframes pulse-red {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+        background-color: #FF5733; /* Red */
+        box-shadow: 0 0 10px rgba(255, 87, 51, 0.7); /* Red glow */
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+        background-color: #e04e2d; /* Darker red */
+        box-shadow: 0 0 20px rgba(255, 87, 51, 1); /* Stronger red glow */
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0.8;
+        background-color: #FF5733; /* Red */
+        box-shadow: 0 0 10px rgba(255, 87, 51, 0.7); /* Red glow */
+    }
+}
+
+  
+

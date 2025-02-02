@@ -21,3 +21,6 @@ uWSGI
 bumpversion
 gitpython
 matplotlib
+grpcio
+pyshark
+netifaces

@@ -18,7 +18,7 @@ Incognito-Vault Version: 1.0.3 — Redefining security for business, professiona
 ├── Database/
 │   ├── Config                    # Contain User Credentials
 │   ├── mysql.json                # Contain Mysql Credentials
-│   └── Super-Admin/              # Contain Redis Credentials
+│   └── redis.json/              # Contain Redis Credentials
 │
 ├── static/
 │   ├── css/                      # CSS files
@@ -33,6 +33,7 @@ Incognito-Vault Version: 1.0.3 — Redefining security for business, professiona
 │
 ├── Modules/
 │   ├── __init__.py               # Initialize Module
+│   ├── health_checker.py         # Health Checker Module
 │   ├── captcha_manager.py        # Captcha Manager
 │   ├── db_manager.py             # Database Manager
 │   ├── error_handler.py          # Error Handler

@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Email
 import bleach
 
 # Switches for enabling/disabling login and signup functionalities
-MODULE_SWITCH_LOGIN = 1  # 1 means enabled, 0 means disabled
+MODULE_SWITCH_LOGIN =  1 # 1 means enabled, 0 means disabled
 MODULE_SWITCH_SIGNUP = 1  # 1 means enabled, 0 means disabled
 
 class LoginForm(FlaskForm):

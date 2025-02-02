@@ -401,3 +401,46 @@ body:has(.footer:in-view) .footer {
     font-weight: bold;
     font-size: 20px;
 }
+
+/*CSS for Drop DOwn Menu in sidebar & Navbar*/
+.nav_dropdown {
+    position: relative;
+  }
+  
+  .dropdown_menu {
+    display: none;
+    position: absolute;
+    background: linear-gradient(135deg, #000000, #1d1e25, #000000);
+    border: 1px solid #ccc;
+    top: 100%;
+    left: 0;
+    width: 200px;
+    z-index: 1000;
+    margin-left: 15px;
+  }
+  
+  .nav_dropdown:hover .dropdown_menu {
+    display: block;
+  }
+  
+  .nav_dropdown a {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+  
+  .nav_dropdown .nav_icon {
+    margin-right: 5px;
+  }
+  
+  .dropdown_item {
+    padding: 8px 16px;
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  .dropdown_item:hover {
+    background: linear-gradient(135deg, #000000, #0b0e24, #000000);
+  }

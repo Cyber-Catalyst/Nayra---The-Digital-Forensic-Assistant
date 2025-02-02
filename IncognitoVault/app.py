@@ -16,6 +16,7 @@ from argon2.exceptions import VerifyMismatchError
 
 
 # Custom module imports
+from Modules.health_checker import HealthChecker
 from Modules.Sniffer import PacketSniffer
 from Modules.IPS import IPAddress
 from Modules.error_handler import ErrorHandler
@@ -264,6 +265,13 @@ def login_required(f):
     return decorated_function
 
 #################### Route Handlers ######################
+
+@app.route("/health", methods=["GET"])
+@login_required
+@rate_limited(rate_limiter)
+def get_health_status():
+    health_status = HealthChecker.health_check()
+    return jsonify(health_status)
 
 @app.route('/start_sniffing')
 @login_required
