@@ -4,7 +4,8 @@ psutil
 pandas
 matplotlib
 scapy
-sklearn
+scikit-learn
 reportlab
 openpyxl
-torch
+shap
+dpkt

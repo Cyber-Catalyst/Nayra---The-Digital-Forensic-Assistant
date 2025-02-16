@@ -10,6 +10,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 from sklearn.svm import OneClassSVM
 from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 from scapy.contrib.bgp import BGP
 from scapy.contrib.ospf import OSPF_Hdr as OSPF
 from scapy.contrib.isis import *
@@ -41,7 +43,11 @@ class NetworkAnalyzer:
     def deep_packet_inspection(self, packet):
         """Detect suspicious payloads using probability-based classification."""
         if packet.haslayer(Raw):
-            payload = bytes(packet[Raw]).decode(errors='ignore').strip()
+            try:
+                payload = bytes(packet[Raw]).decode(errors='replace').strip()
+            except UnicodeDecodeError:
+                print("⚠️ Warning: UnicodeDecodeError encountered in payload. Using fallback decoding.")
+                payload = str(bytes(packet[Raw]))  # Fallback: Convert bytes to string representation
             if self.vectorizer is None or self.model is None:
                 print("⚠️ Warning: Model not trained. Skipping deep packet inspection.")
                 return 0 
@@ -211,36 +217,39 @@ class NetworkAnalyzer:
         return "Unknown Reason (No Transport Layer Detected)"
 
     def extract_features_parallel(self, packet, last_timestamp):
-            """Extract features from a packet in parallel, including TTL and TCP flag descriptions."""
-            ip_src = packet[IP].src if IP in packet else "No IP"
-            ip_dst = packet[IP].dst if IP in packet else "No IP"
-            ttl = packet[IP].ttl if IP in packet else "No TTL"
-            tcp_flags = "No TCP"
-            if packet.haslayer(TCP):
-                flags = packet[TCP].flags
-                flag_map = {
-                    0x01: "FIN", 0x02: "SYN", 0x04: "RST", 0x08: "PSH", 
-                    0x10: "ACK", 0x20: "URG", 0x40: "ECE", 0x80: "CWR", 0x100: "NS"
-                }
-                tcp_flags = ", ".join(flag_name for flag, flag_name in flag_map.items() if flags & flag) or "No TCP Flags"
-            row = {
-                "src_mac": packet.src if hasattr(packet, 'src') else "No Ethernet Layer",
-                "dst_mac": packet.dst if hasattr(packet, 'dst') else "No Ethernet Layer",
-                "ip_src": ip_src,
-                "ip_dst": ip_dst,
-                "ttl": ttl,
-                "src_port": packet[TCP].sport if packet.haslayer(TCP) else (packet[UDP].sport if packet.haslayer(UDP) else "No Transport Layer"),
-                "dst_port": packet[TCP].dport if packet.haslayer(TCP) else (packet[UDP].dport if packet.haslayer(UDP) else "No Transport Layer"),
-                "protocol": "TCP" if packet.haslayer(TCP) else ("UDP" if packet.haslayer(UDP) else "Other"),
-                "packet_size": len(packet),
-                "has_raw": 1 if packet.haslayer(Raw) else 0,
-                "entropy": self.calculate_entropy(bytes(packet[Raw])) if packet.haslayer(Raw) else 0,
-                "tcp_flags": tcp_flags,
-                "inter_arrival_time": float(packet.time - last_timestamp) if last_timestamp else 0.0,
-                "suspicious_payload": self.deep_packet_inspection(packet),
-                "ttl_anomaly": self.detect_ttl_anomaly(ttl) if isinstance(ttl, int) else "Unknown"
+        """Extract features, handling missing timestamps and IP values safely."""
+        ip_src = packet[IP].src if IP in packet else "No IP"
+        ip_dst = packet[IP].dst if IP in packet else "No IP"
+        ttl = packet[IP].ttl if IP in packet else "No TTL"
+        tcp_flags = "No TCP"
+        if packet.haslayer(TCP):
+            flags = packet[TCP].flags
+            flag_map = {
+                0x01: "FIN", 0x02: "SYN", 0x04: "RST", 0x08: "PSH", 
+                0x10: "ACK", 0x20: "URG", 0x40: "ECE", 0x80: "CWR", 0x100: "NS"
             }
-            return row
+            tcp_flags = ", ".join(flag_name for flag, flag_name in flag_map.items() if flags & flag) or "No TCP Flags"
+        packet_time = getattr(packet, 'time', None)  # Handle missing timestamps
+        inter_arrival_time = float(packet_time - last_timestamp) if last_timestamp and packet_time else 0.0
+        row = {
+            "src_mac": packet.src if hasattr(packet, 'src') else "No Ethernet Layer",
+            "dst_mac": packet.dst if hasattr(packet, 'dst') else "No Ethernet Layer",
+            "ip_src": ip_src,
+            "ip_dst": ip_dst,
+            "missing_ip_reason": self.get_missing_ip_reason(packet) if ip_src == "No IP" or ip_dst == "No IP" else None,
+            "ttl": ttl,
+            "src_port": packet[TCP].sport if packet.haslayer(TCP) else (packet[UDP].sport if packet.haslayer(UDP) else "No Transport Layer"),
+            "dst_port": packet[TCP].dport if packet.haslayer(TCP) else (packet[UDP].dport if packet.haslayer(UDP) else "No Transport Layer"),
+            "protocol": "TCP" if packet.haslayer(TCP) else ("UDP" if packet.haslayer(UDP) else "Other"),
+            "packet_size": len(packet),
+            "has_raw": 1 if packet.haslayer(Raw) else 0,
+            "entropy": self.calculate_entropy(bytes(packet[Raw])) if packet.haslayer(Raw) else 0,
+            "tcp_flags": tcp_flags,
+            "inter_arrival_time": inter_arrival_time,
+            "suspicious_payload": self.deep_packet_inspection(packet),
+            "ttl_anomaly": self.detect_ttl_anomaly(ttl) if isinstance(ttl, int) else "Unknown"
+        }
+        return row
 
     def detect_ttl_anomaly(self, ttl):
         """Detects TTL-based anomalies."""
@@ -260,15 +269,25 @@ class NetworkAnalyzer:
         return features
 
     def train_vectorizer_and_model(self, packets):
-        """Train a TF-IDF vectorizer and a KMeans clustering model on packet payloads."""
+        """Train a TF-IDF vectorizer and determine the optimal number of clusters dynamically."""
         payloads = [bytes(packet[Raw]).decode(errors='ignore') for packet in packets if packet.haslayer(Raw)]
         if not payloads:
             print("❌ No Raw payloads found in packets. Skipping model training.")
             return None, None
         self.vectorizer = TfidfVectorizer(max_features=500)
         X = self.vectorizer.fit_transform(payloads)
-        self.model = KMeans(n_clusters=2, random_state=42)
+        distortions = []
+        silhouette_scores = []
+        cluster_range = range(2, min(10, len(payloads))) 
+        for k in cluster_range:
+            kmeans = KMeans(n_clusters=k, random_state=42)
+            labels = kmeans.fit_predict(X)
+            distortions.append(kmeans.inertia_)
+            silhouette_scores.append(silhouette_score(X, labels))
+        optimal_clusters = cluster_range[silhouette_scores.index(max(silhouette_scores))]
+        self.model = KMeans(n_clusters=optimal_clusters, random_state=42)
         self.model.fit(X)
+        print(f"✅ Optimal clusters found: {optimal_clusters}")
         return self.vectorizer, self.model
 
     def detect_anomalies(self, features):
@@ -299,7 +318,7 @@ class NetworkAnalyzer:
         if total_entries == 0:
             return 0.0 
         accuracy_rate = (total_non_anomalies / total_entries) * 100
-        return round(accuracy_rate, 2)  # Return accuracy as a percentage
+        return round(accuracy_rate, 2) 
 
     def analyze_pcap(self, file_path):
         packets = rdpcap(file_path)
@@ -320,7 +339,6 @@ class NetworkAnalyzer:
                 col_width = max(df[col].astype(str).apply(len).max(), len(col)) + 2
                 col_idx = df.columns.get_loc(col) + 1
                 worksheet.column_dimensions[chr(64 + col_idx)].width = col_width
-        
         print(f"✅ Excel Report saved at: {report_xlsx}")
         print(f"📊 Accuracy Rate: {accuracy_rate}%")
 
