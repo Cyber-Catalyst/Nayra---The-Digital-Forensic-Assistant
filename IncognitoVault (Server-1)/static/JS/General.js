@@ -33,14 +33,15 @@ $(document).ready(function() {
         });
     }
 
-    setInterval(fetchPackets, 1000);  // Fetch packets every second
+    setInterval(fetchPackets, 1000);
 });
 
-//JS Code for the Gauges in Dashboard
-let cpuGauge, memoryGauge, swapGauge, diskGauge, uploadGauge, downloadGauge, pingGauge;
+// JS Code for the Gauges in Dashboard
+let uptimeGauge, cpuGauge, memoryGauge, swapGauge, diskGauge, uploadGauge, downloadGauge, pingGauge, latencyGauge;
 
 function initializeGauges() {
     if (typeof JustGage !== 'undefined') {
+        uptimeGauge = createGauge("uptime-meter", "System Uptime", "minutes", 0, 1440);
         cpuGauge = createGauge("cpu-meter", "CPU Usage");
         memoryGauge = createGauge("memory-meter", "Memory Usage");
         swapGauge = createGauge("swap-meter", "Swap Usage");
@@ -48,17 +49,18 @@ function initializeGauges() {
         uploadGauge = createGauge("upload-meter", "Upload Speed", "Mbps");
         downloadGauge = createGauge("download-meter", "Download Speed", "Mbps");
         pingGauge = createGauge("ping-meter", "Ping Latency", "ms");
+        latencyGauge = createGauge("latency-meter", "Data Collection Latency", "seconds");
     } else {
         console.error("JustGage is not defined. Please check the script loading.");
     }
 }
 
-function createGauge(id, title, unit = "%") {
+function createGauge(id, title, unit = "%", min = 0, max = 100) {
     return new JustGage({
         id,
         value: 0,
-        min: 0,
-        max: 100,
+        min,
+        max,
         title,
         label: unit,
         levelColors: ["#FF5733", "#FFC300", "#28B463"],
@@ -67,25 +69,25 @@ function createGauge(id, title, unit = "%") {
         relativeGaugeSize: true,
         labelFontColor: "#FFFFFF",
         valueFontColor: "#FFFFFF",
-        valueFontSize: 25,  // ⬅️ Increase size of center text (default is 16-20)
-        valueFontWeight: "bold", // ⬅️ Make the center value bold
+        valueFontSize: 25,
+        valueFontWeight: "bold",
         donut: true,
-        pointerOptions: { color: "#2C3E50", strokeWidth: 4 },
-        animationSpeed: 300 // Slower animation for smooth transitions
+        pointerOptions: { color: "#2C3E50", strokeWidth: 6 },
+        animationSpeed: 300
     });
 }
 
 function smoothUpdateGauge(gauge, newValue) {
     if (!gauge) return;
     let currentValue = gauge.config.value;
-    let step = (newValue - currentValue) / 20; // Break update into smaller steps
+    let step = (newValue - currentValue) / 20;
     let count = 0;
     function animate() {
         if (count < 20) {
             currentValue += step;
             gauge.refresh(Math.round(currentValue * 100) / 100);
             count++;
-            requestAnimationFrame(animate); // Use requestAnimationFrame for smooth animation
+            requestAnimationFrame(animate);
         } else {
             gauge.refresh(newValue);
         }
@@ -97,11 +99,9 @@ function updateLEDIndicator(ledId, status) {
     const led = document.getElementById(ledId);
     if (led) {
         if (status.includes('Connected')) {
-            // Add the 'green' class to make it green and pulsing
             led.classList.add('green');
             led.classList.remove('red');
         } else {
-            // Add the 'red' class to make it red and pulsing
             led.classList.add('red');
             led.classList.remove('green');
         }
@@ -113,10 +113,11 @@ async function fetchHealthData() {
         const response = await fetch('/health');
         const healthData = await response.json();
 
-        // Safe parsing function to prevent errors
         function parseValue(data, key) {
             return data[key] && typeof data[key] === 'string' ? parseFloat(data[key].split(' ')[0]) || 0 : 0;
         }
+
+        smoothUpdateGauge(uptimeGauge, parseValue(healthData, 'system_uptime'));
         smoothUpdateGauge(cpuGauge, parseValue(healthData, 'cpu_usage'));
         smoothUpdateGauge(memoryGauge, parseValue(healthData, 'memory_usage'));
         smoothUpdateGauge(swapGauge, parseValue(healthData, 'swap_usage'));
@@ -124,6 +125,8 @@ async function fetchHealthData() {
         smoothUpdateGauge(uploadGauge, parseValue(healthData, 'upload_speed'));
         smoothUpdateGauge(downloadGauge, parseValue(healthData, 'download_speed'));
         smoothUpdateGauge(pingGauge, parseValue(healthData, 'ping_latency'));
+        smoothUpdateGauge(latencyGauge, parseValue(healthData, 'data_latency'));
+
         if (healthData.redis_status) {
             updateLEDIndicator('redis-led', healthData.redis_status);
         }
@@ -139,5 +142,5 @@ async function fetchHealthData() {
 document.addEventListener("DOMContentLoaded", () => {
     initializeGauges();
     fetchHealthData();
-    setInterval(fetchHealthData, 1500); // Fetch every 1.5 seconds
+    setInterval(fetchHealthData, 100);
 });

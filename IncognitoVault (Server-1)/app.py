@@ -385,6 +385,16 @@ def database():
         user_id = session['user_id']
     return render_template('Super-Admin/database.html', user=user, user_id=user_id, name=name)
 
+@app.route('/Server2')
+@login_required
+@rate_limited(rate_limiter)
+def server2():
+    if 'user' in session:
+        user = session['user']
+        name = session['username']
+        user_id = session['user_id']
+        return render_template('Super-Admin/server2.html', user=user, user_id=user_id, name=name)
+
 @app.route('/Network-Forensic')
 @login_required
 @rate_limited(rate_limiter)
@@ -486,4 +496,4 @@ def keep_alive():
 
 if __name__ == '__main__':
     print(f"Incognito-Vault, Version: {__version__}")
-    app.run(debug=True, threaded="yes", host='0.0.0.0', port=8800)
+    app.run(debug=True, threaded="yes", host='0.0.0.0', port=6500)

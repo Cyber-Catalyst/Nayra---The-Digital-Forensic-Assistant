@@ -1,0 +1,10 @@
+DBUtils
+pymysql
+psutil
+pandas
+matplotlib
+scapy
+sklearn
+reportlab
+openpyxl
+torch

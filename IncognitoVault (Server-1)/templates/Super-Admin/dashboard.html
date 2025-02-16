@@ -6,9 +6,23 @@
 
 {% block content %}
 
+<h3 class="dash-text">You are watching a live Server Monitoring Dashboard, designed by the Incognito-Vault team. Here data from our specialized collection tool is displayed with a 100ms latency.</h3>
+<br>
+
+    <!-- System Stats Section -->
     <div class="row">
-        <!-- Resource Usage Cards (CPU, Memory, Swap, Disk) -->
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="cpu-card">
+                    <h5 class="card-title">System Uptime</h5>
+                    <div class="gauge-container">
+                        <div id="uptime-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
             <div class="card card-elegant">
                 <div class="card-body" id="cpu-card">
                     <h5 class="card-title">CPU Usage</h5>
@@ -19,7 +33,7 @@
             </div>
         </div>
 
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
             <div class="card card-elegant">
                 <div class="card-body" id="memory-card">
                     <h5 class="card-title">Memory Usage</h5>
@@ -30,7 +44,7 @@
             </div>
         </div>
 
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
             <div class="card card-elegant">
                 <div class="card-body" id="swap-card">
                     <h5 class="card-title">Swap Usage</h5>
@@ -41,7 +55,7 @@
             </div>
         </div>
 
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
             <div class="card card-elegant">
                 <div class="card-body" id="disk-card">
                     <h5 class="card-title">Disk Usage</h5>
@@ -51,8 +65,10 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Network Usage Cards (Ping Meter, Upload Meter, Download Meter) -->
+    <!-- Network Stats Section -->
+    <div class="row">
         <div class="col-md-4 mb-3">
             <div class="card card-elegant">
                 <div class="card-body" id="network-card">
@@ -85,29 +101,27 @@
                 </div>
             </div>
         </div>
-
-        <!-- Service Status Cards (Redis, MySQL) -->
-<div class="col-md-6 mb-3">
-    <div class="card card-elegant">
-        <div class="card-body d-flex align-items-center" id="mysql-card">
-            <!-- LED First -->
-            <div class="led-indicator" id="mysql-led"></div>
-            <h5 class="card-title ml-2">MySQL Status</h5>
-        </div>
     </div>
-</div>
 
-<div class="col-md-6 mb-3">
-    <div class="card card-elegant">
-        <div class="card-body d-flex align-items-center" id="redis-card">
-            <!-- LED First -->
-            <div class="led-indicator" id="redis-led"></div>
-            <h5 class="card-title ml-2">Redis Status</h5>
+    <!-- Service Status Section -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body d-flex align-items-center" id="mysql-card">
+                    <div class="led-indicator" id="mysql-led"></div>
+                    <h5 class="card-title ml-2">MySQL Status</h5>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-
+        <div class="col-md-6 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body d-flex align-items-center" id="redis-card">
+                    <div class="led-indicator" id="redis-led"></div>
+                    <h5 class="card-title ml-2">Redis Status</h5>
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

@@ -1,0 +1,9 @@
+{
+    "1_DB": {
+        "host": "localhost",
+        "user": "nayra_AI",
+        "password": "Nayra-2025",
+        "database": "nayra_DB",
+        "port": 3306
+    }
+}
