@@ -9,3 +9,4 @@ reportlab
 openpyxl
 shap
 dpkt
+python-nmap
