@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Flask
 Flask-WTF
 requests
@@ -24,6 +25,8 @@ matplotlib
 grpcio
 pyshark
 netifaces
+=======
+>>>>>>> 9dc9e63b31c1ed915b1f6a816a0674a0b0934c68
 DBUtils
 pymysql
 psutil
@@ -35,4 +38,8 @@ reportlab
 openpyxl
 shap
 dpkt
+<<<<<<< HEAD
 speedtest-cli 
+=======
+python-nmap
+>>>>>>> 9dc9e63b31c1ed915b1f6a816a0674a0b0934c68
