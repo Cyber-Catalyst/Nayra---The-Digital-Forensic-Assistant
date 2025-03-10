@@ -24,4 +24,15 @@ matplotlib
 grpcio
 pyshark
 netifaces
-speedtest-cli
+DBUtils
+pymysql
+psutil
+pandas
+matplotlib
+scapy
+scikit-learn
+reportlab
+openpyxl
+shap
+dpkt
+speedtest-cli 
