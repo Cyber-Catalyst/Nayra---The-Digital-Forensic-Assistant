@@ -1,0 +1,196 @@
+{% extends "Super-Admin/Base/SA.html" %}
+
+{% block title %}Dashboard - IncognitoVault{% endblock %}
+
+{% block page_header %}Server2-Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Container for the toggle */
+
+.toggle-container {
+    width: 100%;
+    text-align: right; /* Aligns switch to the right */
+    margin-bottom: 20px; /* Adds space below it */
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-right: 50px; /* Adds space from the right edge */
+}
+
+/* Hide default checkbox */
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The track */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    border-radius: 24px;
+    width: 100%;
+    height: 100%;
+    transition: background-color 0.3s;
+}
+
+/* The circular slider */
+.slider::before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+/* Default (OFF) state - Red */
+.toggle-switch input + .slider {
+    background-color: #d9534f; /* Red */
+}
+
+/* Toggled state */
+.toggle-switch input:checked+.slider {
+    background-color: #4caf50;
+}
+
+.toggle-switch input:checked+.slider::before {
+    transform: translateX(26px);
+}
+
+    </style>
+<h3 class="dash-text">You are watching a live Server Monitoring Dashboard, designed by the Incognito-Vault team. Here data from our specialized collection tool is displayed with a 100ms latency.</h3>
+<br>
+
+<div class="toggle-container">
+    <label class="toggle-switch">
+        <input type="checkbox" />
+        <span class="slider"></span>
+    </label>
+</div>
+
+    <!-- System Stats Section -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="cpu-card">
+                    <h5 class="card-title">System Uptime</h5>
+                    <div class="gauge-container">
+                        <div id="uptime-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="cpu-card">
+                    <h5 class="card-title">CPU Usage</h5>
+                    <div class="gauge-container">
+                        <div id="cpu-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="memory-card">
+                    <h5 class="card-title">Memory Usage</h5>
+                    <div class="gauge-container">
+                        <div id="memory-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="swap-card">
+                    <h5 class="card-title">Swap Usage</h5>
+                    <div class="gauge-container">
+                        <div id="swap-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="disk-card">
+                    <h5 class="card-title">Disk Usage</h5>
+                    <div class="gauge-container">
+                        <div id="disk-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network Stats Section -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="network-card">
+                    <h5 class="card-title">Ping Status</h5>
+                    <div class="gauge-container">
+                        <div id="ping-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="network-card">
+                    <h5 class="card-title">Upload Speed</h5>
+                    <div class="gauge-container">
+                        <div id="upload-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body" id="network-card">
+                    <h5 class="card-title">Download Speed</h5>
+                    <div class="gauge-container">
+                        <div id="download-meter"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Status Section -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body d-flex align-items-center" id="mysql-card">
+                    <div class="led-indicator" id="mysql-led"></div>
+                    <h5 class="card-title ml-2">MySQL Status</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card card-elegant">
+                <div class="card-body d-flex align-items-center" id="redis-card">
+                    <div class="led-indicator" id="redis-led"></div>
+                    <h5 class="card-title ml-2">Redis Status</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
